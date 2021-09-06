@@ -42,13 +42,13 @@ for ( i in 1:n.sim){
 
 ## estimated b2 is quite close to the true b2:
 hist(b2_list)
-mean(b2_list) # 5.000048
+mean(b2_list) # 5.00008
 
 ## averaged biasness of estimated b2 is almost 0:
-mean(b2_list-b2) ## 4.76883e-05
+mean(b2_list-b2) ## 7.954301e-05
 
 ## RMSE of estimated b2 is:
-sqrt(mean((b2_list-b2)^2)) # 0.012
+sqrt(mean((b2_list-b2)^2)) # 0.007
 
 
 
