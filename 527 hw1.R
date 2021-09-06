@@ -24,17 +24,17 @@ for ( i in 1:n.sim){
   ## Obtain b2 via orthogonal optimization-----
   ### 1. regress y ~ x1 -----
   ## exclude components explained by x1 from y
-  fit1 <- lm(y ~ x1)
+  fit1 <- lm(y ~ x1-1)
   e_yx1 <- fit1$residuals
   
   ### 2. regress x2 ~ x1 -----
   ## exclude components explained by x1 from x2
-  fit2 <- lm(x2 ~ x1)
+  fit2 <- lm(x2 ~ x1-1)
   e_x2x1 <- fit2$residuals
   
   ### 3. regress e_yx1 ~ e_x2x1 -----
-  fit3 <- lm(e_yx1 ~ e_x2x1)
-  b2_est <- summary(fit3)$coefficients[2,1]
+  fit3 <- lm(e_yx1 ~ e_x2x1-1)
+  b2_est <- summary(fit3)$coefficients[1,1]
   b2_list <- c(b2_list,b2_est)
   
 }
