@@ -1,9 +1,9 @@
 
 ## load data -----
 
-gene <- read.delim("~/Desktop/PSU/Fall 2021/PHS 527 Data mining/OneDrive_1_10-4-2021/GEUVADIS_normalized_expression_chr20")
+gene <- read.delim("GEUVADIS_normalized_expression_chr20")
 
-genotype <- read.delim("~/Desktop/PSU/Fall 2021/PHS 527 Data mining/OneDrive_1_10-4-2021/GEUVADIS_chr20_processed.traw")
+genotype <- read.delim("GEUVADIS_chr20_processed.traw")
 
 ## data set construction -----
 ### suppose we consider gene id ENSG00000000419 only
@@ -18,18 +18,8 @@ x.idx <- which(genotype$POS >= start & genotype$POS <= end)
 x <- t(genotype[x.idx,7:364])
 colnames(x) <- genotype$SNP[x.idx]
 
-## GLMNET results -----
-# set.seed(210)
-library(glmnet)
-fit_1 <- glmnet(x,y,family = "gaussian")
-# plot(fit_1)
-mycoef <- coef(fit_1,s=0.36090)
-rownames(mycoef)[which(mycoef != 0)]
-mycoef[which(mycoef != 0)]
 
 ## Build my own cyclic coordinate descent algorithm for lasso -----
-### x is standardized
-### y is standardized when family = "gaussian"
 
 soft_threshold <- function(u,v,lambda,n,intercept=FALSE){
   if (intercept == TRUE & j ==1 ){
@@ -45,6 +35,7 @@ soft_threshold <- function(u,v,lambda,n,intercept=FALSE){
 }
 
 ccd_function <- function(x,y,lambda,threshold=1E-7,intercept=FALSE){
+  ## inputs of x and y do not need to be standardized
   
   ## scale x and y
   xs <- scale(x)
@@ -62,8 +53,6 @@ ccd_function <- function(x,y,lambda,threshold=1E-7,intercept=FALSE){
   err <- matrix(5,nrow=nvar)
   i =1
   # while(any(err>threshold) == TRUE){  
-  # If stop the repetation based on the threshold, it will take much more time to run
-  # The glmnet stops when the 
   while (i <=2000){ # 1000 is enough. The results at the end are calculated with 2000 repetation.
     start_time <- Sys.time()
     for (j in 1:nvar){
@@ -135,6 +124,7 @@ int1 == int2
 # With intercept, the results of my cyclic coordinate descent match the glmnet results.
 
 ## Without intercept -----
+### select a lambda = 0.1
 bmat_noint <- readRDS("bmat_noint.rds")
 noint1 <- colnames(x)[which(bmat_noint!=0)]
 bmat_noint[which(bmat_noint!=0)]
