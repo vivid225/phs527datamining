@@ -148,4 +148,4 @@ mean(converge_sgd)
 
 When sample size is small (e.g. n=100, 1000), both GD and SGD are easy to converge. The convergence rates for them are 100% among k = 10,000 times of running.
 
-When sample size is large (e.g. n=10,000), GD fails to give good convergence. Among 100 times of running, the convergence rate for GD is about 30%, while the convergence rate for SGD is around 100%. The time for convergence is also fast for SGD, taking less than 1 sec to converge for each running.
+When sample size is large (e.g. n=100,000), GD fails to give good convergence. Among 100 times of running, the convergence rate for GD is about 30%, while the convergence rate for SGD is around 100%. The time for convergence is also fast for SGD, taking less than 1 sec to converge for each running.
