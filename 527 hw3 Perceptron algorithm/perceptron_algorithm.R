@@ -5,9 +5,12 @@ library(mvtnorm)
 
 
 ## GD -----
+k = 10000
+n = 10000
 converge <- c()
-for (i in 1:10000){
-  n=10000
+start_time <- Sys.time()
+for (i in 1:k){
+  # n=10000
   X = rmvnorm(n, mean=c(0.5,1.5), sigma=matrix(c(1,0.5,0.5,1), ncol = 2))
   x1 = X[,1]
   x2 = X[,2]
@@ -50,15 +53,17 @@ for (i in 1:10000){
     }
   }
 }
-
+end_time <- Sys.time()
+end_time - start_time
 mean(converge)
 
 
 ## Stochastic gradient descent -----
 
 converge_sgd <- c()
-for (i in 1:10000){
-  n=10000
+start_time <- Sys.time()
+for (i in 1:k){
+  # n=10000
   X = rmvnorm(n, mean=c(0.5,1.5), sigma=matrix(c(1,0.5,0.5,1), ncol = 2))
   x1 = X[,1]
   x2 = X[,2]
@@ -102,7 +107,8 @@ for (i in 1:10000){
     }
   }
 }
-
+end_time <- Sys.time()
+end_time - start_time
 mean(converge_sgd)
 
 

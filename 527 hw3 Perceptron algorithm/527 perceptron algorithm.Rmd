@@ -18,16 +18,16 @@ library(mvtnorm)
 
 ## Simulate data
 
-To apply the perceptron algorithm, we simulate two groups of data where the separating hyper-plane can perfectly separate them,
+To apply the perceptron algorithm, we simulate two groups of data where the separating hyper-plane can perfectly separate them:
 
 ```{r}
-n=10000
+n=100000
 X = rmvnorm(n, mean=c(0.5,1.5), sigma=matrix(c(1,0.5,0.5,1), ncol = 2))
-x1 = X[1:100,1]
-x2 = X[1:100,2]
+x1 = X[,1]
+x2 = X[,2]
 X = rmvnorm(n, mean=c(10,10), sigma=matrix(c(1,0.5,0.5,1), ncol = 2))
-x11 = X[1:100,1]
-x22 = X[1:100,2]
+x11 = X[,1]
+x22 = X[,2]
 
 p = plot(x1,x2,col="red",xlim=c(-5,20),ylim=c(-5,20))+ points(x11,x22,col="blue")
 
@@ -40,12 +40,13 @@ p = plot(x1,x2,col="red",xlim=c(-5,20),ylim=c(-5,20))+ points(x11,x22,col="blue"
 For both GD and SGD, we run the algorithm for $k$ times and in each run, the simulated data contains $n$ data points.
 
 ```{r eval=FALSE, include=TRUE}
-k = 10000
-n = 10000
+k = 100
+n = 100000
 
-rho = 0.5 # step size is set to be 0.5 
+rho = 0.8 # step size is set to be 0.5 
 
 converge <- c()
+start_time <- Sys.time()
 for (i in 1:k){
   X = rmvnorm(n, mean=c(0.5,1.5), sigma=matrix(c(1,0.5,0.5,1), ncol = 2))
   x1 = X[,1]
@@ -87,7 +88,8 @@ for (i in 1:k){
     }
   }
 }
-
+end_time <- Sys.time()
+end_time - start_time
 mean(converge)
 ```
 
@@ -97,6 +99,7 @@ mean(converge)
 ```{r eval=FALSE, include=TRUE}
 # judge = FALSE
 converge_sgd <- c()
+start_time <- Sys.time()
 for (i in 1:k){
 
   X = rmvnorm(n, mean=c(0.5,1.5), sigma=matrix(c(1,0.5,0.5,1), ncol = 2))
@@ -136,16 +139,26 @@ for (i in 1:k){
       }
     } else {
       # print(bmat)
-      print(j)
+      # print(j)
       converge_sgd <- c(converge_sgd, 1)
       break
     }
   }
 }
-
+end_time <- Sys.time()
+end_time - start_time
 mean(converge_sgd)
 ```
 
 When sample size is small (e.g. n=100, 1000), both GD and SGD are easy to converge. The convergence rates for them are 100% among k = 10,000 times of running.
 
 When sample size is large (e.g. n=100,000), GD fails to give good convergence. Among 100 times of running, the convergence rate for GD is about 30%, while the convergence rate for SGD is around 100%. The time for convergence is also fast for SGD, taking less than 1 sec to converge for each running.
+
+Possible reasons for the large discrepancy between GD and SGD when sample size is large:
+
+- Large data set takes GD more time to consider all mis-classified data points at one iteration, especially when my starting hyper-plane is far from the "correct" hyper-plane.
+
+- GD can converge for 100%, but takes more iterations.
+
+- Update in each iteration for GD is slow. If we want faster convergence, increasing both maximum iteration and step size may be one solution, but not a decisive one for GD to catch up with SGD.
+
