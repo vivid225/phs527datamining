@@ -43,7 +43,7 @@ For both GD and SGD, we run the algorithm for $k$ times and in each run, the sim
 k = 100
 n = 100000
 
-rho = 0.8 # step size is set to be 0.5 
+rho = 0.5 # step size is set to be 0.5 
 
 converge <- c()
 start_time <- Sys.time()
